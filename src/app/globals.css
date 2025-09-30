@@ -1,10 +1,8 @@
-/* src/app/globals.css */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 선택적: 애플 스타일의 부드러운 글꼴 렌더링 */
+/* 애플 스타일의 부드러운 글꼴 렌더링 */
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -1,7 +1,4 @@
-// src/app/layout.tsx
-
-import './globals.css'; // 전역 CSS 임포트
-
+import './globals.css';
 export default function RootLayout({
   children,
 }: {

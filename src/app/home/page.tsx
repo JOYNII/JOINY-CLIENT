@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import PartyCard from "../../components/PartyCard";
 
 const myParties = [
@@ -27,10 +28,6 @@ const myParties = [
 ];
 
 const HomePage = () => {
-  const handleAddParty = () => {
-    alert("새 파티를 추가합니다!");
-  };
-
   return (
     <div className="min-h-screen bg-neutral-50 text-gray-900 p-6 md:p-12 lg:p-20">
       <header className="mb-12 md:mb-16 lg:mb-20">
@@ -62,8 +59,8 @@ const HomePage = () => {
 
       {/* 3. 파티 추가 버튼 (하단 중앙) */}
       <div className="flex justify-center pt-8 border-t border-gray-200">
-        <button
-          onClick={handleAddParty}
+        <Link
+          href="/theme"
           className="bg-black text-white px-10 py-4 rounded-xl shadow-2xl shadow-black/20 hover:bg-gray-700 transition-all duration-300 text-lg font-medium tracking-wide flex items-center space-x-2 transform hover:scale-[1.02]"
         >
           <svg
@@ -81,7 +78,7 @@ const HomePage = () => {
             ></path>
           </svg>
           <span>새 파티 시작하기</span>
-        </button>
+        </Link>
       </div>
     </div>
   );
