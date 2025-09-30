@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function ThemePage() {
   return (
     <div className="min-h-screen bg-neutral-50 text-gray-900 p-6 md:p-12 lg:p-20">
@@ -14,9 +16,11 @@ export default function ThemePage() {
         <div className="flex flex-col md:flex-row gap-10">
           <div className="w-72 h-56 bg-red-500 rounded-xl shadow-lg flex items-center justify-center text-white text-3xl font-bold cursor-pointer transform hover:scale-105 transition-transform">
             크리스마스
+            <Link href="/invitation" className="absolute inset-0" />
           </div>
           <div className="w-72 h-56 bg-sky-500 rounded-xl shadow-lg flex items-center justify-center text-white text-3xl font-bold cursor-pointer transform hover:scale-105 transition-transform">
             동창회
+            <Link href="/invitation" className="absolute inset-0" />
           </div>
         </div>
       </section>
