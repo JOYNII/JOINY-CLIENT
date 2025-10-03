@@ -1,4 +1,6 @@
 import './globals.css';
+import ConditionalLayout from '../components/ConditionalLayout';
+
 export default function RootLayout({
   children,
 }: {
@@ -11,7 +13,7 @@ export default function RootLayout({
         <title>Myparty App</title>
       </head>
       <body>
-        {children}
+        <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
   );

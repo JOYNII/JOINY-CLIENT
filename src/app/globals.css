@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+#__next,
+main {
+  height: 100%;
+}
+
 /* 애플 스타일의 부드러운 글꼴 렌더링 */
 body {
   -webkit-font-smoothing: antialiased;

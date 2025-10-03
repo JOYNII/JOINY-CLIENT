@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
-// Placeholder icons for better UI
 const UserCircleIcon = () => (
   <svg className="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0012 11z" clipRule="evenodd"></path></svg>
 );
@@ -13,6 +13,16 @@ const PhotoIcon = () => (
 
 
 export default function InvitationPage() {
+  const searchParams = useSearchParams();
+  const [place, setPlace] = useState('');
+
+  useEffect(() => {
+    const placeFromQuery = searchParams.get('place');
+    if (placeFromQuery) {
+      setPlace(decodeURIComponent(placeFromQuery));
+    }
+  }, [searchParams]);
+
   const hostName = "김조이"; 
   const friends = [ { id: 1, name: '김민준' }, { id: 2, name: '이서연' }, { id: 3, name: '박도윤' } ];
 
@@ -52,9 +62,22 @@ export default function InvitationPage() {
           <textarea id="party-description" rows={4} placeholder="파티에 대한 설명을 자유롭게 적어주세요." className="mt-2 block w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white"/>
         </div>
 
-        <div>
+        <div id="place-section">
           <label className="text-lg font-semibold text-gray-700">장소</label>
-          <button type="button" className="mt-2 w-full p-4 bg-white border-2 border-dashed border-gray-300 rounded-lg text-lg text-gray-500 hover:bg-gray-100 hover:border-gray-400 transition flex items-center justify-center"><span>선택하기</span></button>
+          {place ? (
+            <div className="mt-2 flex items-center justify-between p-4 bg-white border border-gray-300 rounded-lg text-lg">
+              <span className="text-gray-900">{place}</span>
+              <Link href="/invitation/location">
+                <button className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition">변경</button>
+              </Link>
+            </div>
+          ) : (
+            <Link href="/invitation/location">
+              <div className="mt-2 w-full p-4 bg-white border-2 border-dashed border-gray-300 rounded-lg text-lg text-gray-500 hover:bg-gray-100 hover:border-gray-400 transition flex items-center justify-center cursor-pointer">
+                  <span>선택하기</span>
+              </div>
+            </Link>
+          )}
         </div>
 
         <div>
@@ -79,7 +102,6 @@ export default function InvitationPage() {
             <button type="button" className="mt-4 w-full p-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition">+ 친구 초대</button>
         </div>
 
-        {/* 참가비 */}
         <div>
             <label htmlFor="participation-fee" className="text-lg font-semibold text-gray-700">참가비</label>
             <div className="relative mt-2">
@@ -88,7 +110,6 @@ export default function InvitationPage() {
             </div>
         </div>
 
-        {/* 사진 업로드 공간 */}
         <div>
             <label className="text-lg font-semibold text-gray-700">오늘의 네컷</label>
             <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 bg-white">
