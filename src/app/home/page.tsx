@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import PartyCard from "../../components/PartyCard";
+import PageHeader from "../../components/PageHeader";
 
 const myParties = [
   {
@@ -30,14 +31,10 @@ const myParties = [
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-neutral-50 text-gray-900 p-6 md:p-12 lg:p-20">
-      <header className="mb-12 md:mb-16 lg:mb-20">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-gray-900 leading-none">
-          Myparty
-        </h1>
-        <p className="mt-2 text-xl md:text-2xl text-gray-500 font-light">
-          내가 가입한 파티, 그리고 새로운 시작.
-        </p>
-      </header>
+      <PageHeader 
+        title="Myparty"
+        subtitle="내가 가입한 파티, 그리고 새로운 시작."
+      />
 
       {/* 2. 중앙 - 파티 목록 섹션 */}
       <section className="mb-16">

@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import KakaoMap from "./KakaoMap";
+import KakaoMap from "../../../components/KakaoMap";
 
 interface LocationSelectorProps {
   onConfirm: (placeName: string) => void;
   onCancel: () => void;
 }
 
-export default function LocationSelector({ onConfirm, onCancel }: LocationSelectorProps) {
+export default function LocationSelector({
+  onConfirm,
+  onCancel,
+}: LocationSelectorProps) {
   const [keyword, setKeyword] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
@@ -39,8 +42,24 @@ export default function LocationSelector({ onConfirm, onCancel }: LocationSelect
               파티 장소를 검색하고 지도에서 선택해주세요.
             </p>
           </div>
-          <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          <button
+            onClick={onCancel}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
           </button>
         </header>
 
@@ -78,7 +97,7 @@ export default function LocationSelector({ onConfirm, onCancel }: LocationSelect
           </div>
 
           <div className="flex justify-end gap-4 pt-4">
-             <button
+            <button
               onClick={onCancel}
               className="px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition"
             >

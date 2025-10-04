@@ -1,16 +1,13 @@
 import Link from "next/link";
+import PageHeader from "../../components/PageHeader";
 
 export default function ThemePage() {
   return (
     <div className="min-h-screen bg-neutral-50 text-gray-900 p-6 md:p-12 lg:p-20">
-      <header className="mb-12 md:mb-16">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-gray-900 leading-none">
-          Theme
-        </h1>
-        <p className="mt-2 text-xl md:text-2xl text-gray-500 font-light">
-          다양한 테마의 파티를 탐색해보세요.
-        </p>
-      </header>
+      <PageHeader 
+        title="Theme"
+        subtitle="다양한 테마의 파티를 탐색해보세요."
+      />
 
       <section>
         <div className="flex flex-col md:flex-row gap-10">
