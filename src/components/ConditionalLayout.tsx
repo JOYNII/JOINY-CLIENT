@@ -15,8 +15,7 @@ const ConditionalLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      {/* 네비게이션 바가 있을 때 콘텐츠가 가려지지 않도록 하단에 여백을 추가합니다. */}
-      <main className={shouldShowNavBar ? 'pb-20' : ''}>
+      <main className={`flex-grow overflow-y-auto ${shouldShowNavBar ? 'pb-20' : ''}`}>
         {children}
       </main>
       {shouldShowNavBar && <BottomNavBar />}

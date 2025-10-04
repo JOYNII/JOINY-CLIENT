@@ -31,7 +31,7 @@ export default function InvitationPage() {
     <>
       <div className="min-h-screen bg-neutral-50 text-gray-900 p-6 md:p-12 lg:p-20">
         <PageHeader
-          title="초대장 만들기"
+          title="Invitation"
           subtitle="특별한 파티를 계획하고 친구들을 초대해보세요."
         />
 
