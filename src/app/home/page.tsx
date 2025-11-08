@@ -1,42 +1,18 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 import PartyCard from "../../components/PartyCard";
 import PageHeader from "../../components/PageHeader";
-
-const myParties = [
-  {
-    id: "4",
-    name: "새로운 파티",
-    members: 1,
-    maxMembers: 10,
-    description: "방금 만든 따끈따끈한 파티!",
-    showInviteButton: true,
-  },
-  {
-    id: "1",
-    name: "주말 풋살 모임",
-    members: 4,
-    maxMembers: 6,
-    description: "매주 토요일 즐거운 풋살!",
-  },
-  {
-    id: "2",
-    name: "스터디 그룹: Next.js",
-    members: 3,
-    maxMembers: 5,
-    description: "Next.js 딥 다이브 스터디",
-  },
-  {
-    id: "3",
-    name: "저녁 러닝 크루",
-    members: 8,
-    maxMembers: 10,
-    description: "퇴근 후 함께 뛰어요!",
-  },
-];
+import { getParties } from "../../utils/mockApi";
+import { Party } from "../../types";
 
 const HomePage = () => {
+  const { data: parties, isLoading, error } = useQuery<Party[]>({
+    queryKey: ['parties'],
+    queryFn: getParties
+  });
+
   return (
     <div className="bg-neutral-50 text-gray-900 p-6 md:p-12 lg:p-20">
       <PageHeader 
@@ -44,11 +20,10 @@ const HomePage = () => {
         subtitle="내가 가입한 파티, 그리고 새로운 시작."
       />
 
-      {/* 2. 중앙 - 파티 목록 섹션 */}
       <section className="mb-16">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 tracking-tight">
-            활성화된 파티 목록 ({myParties.length})
+            활성화된 파티 목록 ({parties?.length || 0})
           </h2>
           <Link
             href="/theme"
@@ -72,15 +47,17 @@ const HomePage = () => {
           </Link>
         </div>
 
-        {myParties.length > 0 ? (
-          // 블록 단위 그리드, 넓은 간격 유지
+        {isLoading && <p className="text-lg text-gray-600">파티 목록을 불러오는 중...</p>}
+        {error && <p className="text-lg text-red-600">오류가 발생했습니다: {error.message}</p>}
+        
+        {parties && parties.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-            {myParties.map((party) => (
-              <PartyCard key={party.id} {...party} />
+            {parties.map((party) => (
+              <PartyCard key={party.id} party={party} />
             ))}
           </div>
         ) : (
-          <p className="text-lg text-gray-600">아직 가입한 파티가 없습니다.</p>
+          !isLoading && <p className="text-lg text-gray-600">아직 가입한 파티가 없습니다.</p>
         )}
       </section>
     </div>
