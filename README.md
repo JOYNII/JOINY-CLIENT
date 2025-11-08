@@ -9,4 +9,5 @@
 | **Version Control** | ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white), ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white) |
 
 
-- 개발 단계에서 초대 기능 확인 하려면 로컬에서 https로 서버 열어야함 -> pnpm run dev:https 
+- 개발 단계에서 초대 기능 확인 하려면 로컬에서 https로 서버 열어야함 
+- : pnpm install -> pnpm run dev:https 
