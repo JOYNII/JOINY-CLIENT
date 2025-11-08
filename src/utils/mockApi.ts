@@ -3,14 +3,20 @@ import { Party, User } from '../types';
 
 // --- Mock Data ---
 
-const CURRENT_USER: User = { id: 'user1', name: '김조이' };
+const MOCK_USERS: User[] = [
+  { id: 'user1', name: '김조이' },
+  { id: 'user2', name: '박개발' },
+  { id: 'user3', name: '최디자' },
+];
+
+const CURRENT_USER: User = MOCK_USERS[0]; // Default user
 
 const initialParties: Party[] = [
   {
     id: '1',
     partyName: '주말 풋살 모임',
     partyDescription: '매주 토요일 즐거운 풋살!',
-    members: [CURRENT_USER],
+    members: [MOCK_USERS[0]],
     maxMembers: 6,
     theme: 'christmas',
     hostName: '김조이',
@@ -23,7 +29,7 @@ const initialParties: Party[] = [
     id: '2',
     partyName: '스터디 그룹: Next.js',
     partyDescription: 'Next.js 딥 다이브 스터디',
-    members: [{ id: 'user2', name: '박개발' }],
+    members: [MOCK_USERS[1]],
     maxMembers: 5,
     theme: 'reunion',
     hostName: '박개발',
@@ -54,6 +60,18 @@ const savePartiesToStorage = (parties: Party[]) => {
 // --- Exported Functions ---
 
 export const getCurrentUser = (): User => {
+  if (typeof window === 'undefined') return CURRENT_USER;
+  
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('user');
+  
+  if (userId) {
+    const userIndex = parseInt(userId, 10) - 1;
+    if (userIndex >= 0 && userIndex < MOCK_USERS.length) {
+      return MOCK_USERS[userIndex];
+    }
+  }
+  
   return CURRENT_USER;
 };
 
@@ -84,7 +102,7 @@ export const createParty = async (partyData: Omit<Party, 'id' | 'members'>): Pro
       const newParty: Party = {
         ...partyData,
         id: Date.now().toString(),
-        members: [CURRENT_USER], // The creator automatically joins
+        members: [getCurrentUser()], // The creator automatically joins
       };
       const updatedParties = [...parties, newParty];
       savePartiesToStorage(updatedParties);
@@ -106,10 +124,6 @@ export const joinParty = async (partyId: string, userId: string): Promise<Party 
 
       const party = parties[partyIndex];
 
-      if (party.members.length >= party.maxMembers) {
-        return reject(new Error('Party is full'));
-      }
-
       if (party.members.some((member) => member.id === userId)) {
         // User is already in the party, so we'll treat this as leaving
         const updatedMembers = party.members.filter((member) => member.id !== userId);
@@ -118,8 +132,12 @@ export const joinParty = async (partyId: string, userId: string): Promise<Party 
         resolve(parties[partyIndex]);
         return;
       }
+
+      if (party.members.length >= party.maxMembers) {
+        return reject(new Error('Party is full'));
+      }
       
-      const user: User = userId === CURRENT_USER.id ? CURRENT_USER : { id: userId, name: `User ${userId}`};
+      const user = MOCK_USERS.find(u => u.id === userId) || { id: userId, name: `Unknown User ${userId}`};
 
       const updatedMembers = [...party.members, user];
       parties[partyIndex].members = updatedMembers;

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
+import React, { useEffect, useState, useRef, useMemo } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { io, Socket } from "socket.io-client";
 import PageHeader from "../../../components/PageHeader";
@@ -17,9 +17,12 @@ interface ChatMessage {
 export default function PartyDetailsPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const { id } = params;
-  const currentUser = getCurrentUser();
+  
+  const currentUser = useMemo(() => getCurrentUser(), [searchParams]);
+  
   const socketRef = useRef<Socket | null>(null);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -46,17 +49,30 @@ export default function PartyDetailsPage() {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
+    // Listen for the signal to refetch party data
+    socket.on("refetch_party_data", () => {
+      console.log("Received refetch signal. Invalidating queries.");
+      queryClient.invalidateQueries({ queryKey: ['party', id] });
+      queryClient.invalidateQueries({ queryKey: ['parties'] });
+    });
+
     // Cleanup on component unmount
     return () => {
       socket.disconnect();
     };
-  }, [id]);
+  }, [id, queryClient]);
 
   const { mutate: toggleJoinLeave, isPending: isJoinLeavePending } = useMutation({
     mutationFn: () => joinParty(id as string, currentUser.id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['parties'] });
+      // Immediately invalidate local queries for a snappy UI response for the acting user.
       queryClient.invalidateQueries({ queryKey: ['party', id] });
+      queryClient.invalidateQueries({ queryKey: ['parties'] });
+      
+      // Emit an event to notify all other clients to refetch.
+      if (socketRef.current) {
+        socketRef.current.emit("party_state_change", { partyId: id });
+      }
     },
     onError: (error) => {
       alert(`오류가 발생했습니다: ${error.message}`);

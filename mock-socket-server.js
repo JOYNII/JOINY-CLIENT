@@ -30,6 +30,14 @@ io.on("connection", (socket) => {
     console.log(`[Socket.io] Message received in room ${partyId}:`, message);
   });
 
+  // Listen for a signal that the party state has changed (e.g., user joined/left)
+  socket.on("party_state_change", (data) => {
+    const { partyId } = data;
+    // Broadcast a signal to all clients in the room to refetch their data
+    io.to(partyId).emit("refetch_party_data");
+    console.log(`[Socket.io] Broadcasting refetch signal to room ${partyId}`);
+  });
+
   // Listen for user disconnection
   socket.on("disconnect", () => {
     console.log(`[Socket.io] User disconnected: ${socket.id}`);
