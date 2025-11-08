@@ -6,6 +6,14 @@ import PageHeader from "../../components/PageHeader";
 
 const myParties = [
   {
+    id: "4",
+    name: "새로운 파티",
+    members: 1,
+    maxMembers: 10,
+    description: "방금 만든 따끈따끈한 파티!",
+    showInviteButton: true,
+  },
+  {
     id: "1",
     name: "주말 풋살 모임",
     members: 4,

@@ -4,18 +4,16 @@ import React, { useState } from "react";
 import Link from "next/link";
 import LocationSelector from "./components/LocationSelector";
 import PlaceSection from "./components/PlaceSection";
-import ImageUploader from './components/ImageUploader';
+import ImageUploader from "./components/ImageUploader";
 import FormField from "../../components/FormField";
 import PageHeader from "../../components/PageHeader";
-import FriendsSection from "./components/FriendsSection";
-import FeeSelector from '../../components/FeeSelector';
-
+import FeeSelector from "../../components/FeeSelector";
 
 export default function InvitationPage() {
-  const [place, setPlace] = useState('');
+  const [place, setPlace] = useState("");
   const [isSelectingLocation, setIsSelectingLocation] = useState(false);
-  const [hostName, setHostName] = useState('김조이');
-  const [fee, setFee] = useState<number | string>('');
+  const [hostName, setHostName] = useState("김조이");
+  const [fee, setFee] = useState<number | string>("");
 
   const handleConfirmPlace = (selectedPlace: string) => {
     setPlace(selectedPlace);
@@ -73,8 +71,6 @@ export default function InvitationPage() {
             placeholder="예: 피자, 치킨, 음료 등"
           />
 
-          <FriendsSection friends={friends} />
-
           <FeeSelector value={fee} onFeeChange={setFee} />
 
           <ImageUploader />
@@ -84,12 +80,6 @@ export default function InvitationPage() {
               초대장 저장
               <Link href="/home" className="absolute inset-0"></Link>
             </div>
-            <button
-              type="button"
-              className="px-10 py-4 bg-white text-black border border-gray-300 font-bold text-lg rounded-xl shadow-sm hover:bg-gray-100 transition-colors"
-            >
-              공유하기
-            </button>
           </div>
         </section>
       </div>

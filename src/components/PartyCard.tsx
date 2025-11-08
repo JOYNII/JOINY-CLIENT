@@ -1,6 +1,7 @@
 // src/components/PartyCard.tsx (생성/수정)
 
 import React from "react";
+import InviteButton from "../app/home/components/InviteButton";
 
 interface PartyCardProps {
   id: string;
@@ -8,6 +9,7 @@ interface PartyCardProps {
   members: number;
   maxMembers: number;
   description?: string;
+  showInviteButton?: boolean;
 }
 
 const PartyCard: React.FC<PartyCardProps> = ({
@@ -16,6 +18,7 @@ const PartyCard: React.FC<PartyCardProps> = ({
   members,
   maxMembers,
   description,
+  showInviteButton = false,
 }) => {
   return (
     <div className="bg-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col space-y-3 border border-gray-100">
@@ -32,9 +35,12 @@ const PartyCard: React.FC<PartyCardProps> = ({
         </p>
       </div>
 
-      <button className="mt-4 self-start px-4 py-2 text-sm font-medium text-blue-600 border border-blue-100 bg-white hover:bg-blue-50 rounded-lg transition-colors duration-200 tracking-wide">
-        파티 입장
-      </button>
+      <div className="mt-4 flex items-center space-x-2">
+        <button className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-100 bg-white hover:bg-blue-50 rounded-lg transition-colors duration-200 tracking-wide">
+          파티 입장
+        </button>
+        <InviteButton />
+      </div>
     </div>
   );
 };
