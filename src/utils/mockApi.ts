@@ -63,11 +63,13 @@ export const getPartyById = async (id: string): Promise<Party | undefined> => {
 // The functions below are now legacy as the logic is on the server.
 // They are kept to prevent breaking other parts of the app that might use them.
 
-export const createParty = async (partyData: Omit<Party, 'id' | 'members'>): Promise<Party> => {
-  console.log('Creating new party...');
+export const createParty = async (partyData: Omit<Party, 'id' | 'members' | 'hostName'>): Promise<void> => {
+  console.log('Emitting create_party event to server with data:', partyData);
   return new Promise((resolve) => {
-    // This logic is now on the server. This function is deprecated.
-    resolve({} as Party); 
+    socket.emit('create_party', partyData);
+    // We don't wait for a response here. The server will broadcast the update.
+    // The query invalidation in the component will trigger a refetch.
+    resolve();
   });
 };
 

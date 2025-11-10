@@ -107,6 +107,26 @@ io.on("connection", (socket) => {
     socket.emit('all_parties', parties);
   });
 
+  // NEW: Handle party creation
+  socket.on('create_party', (newPartyData) => {
+    console.log('[Socket.io] Received create_party request with data:', newPartyData);
+    const newId = String(Date.now());
+    const host = MOCK_USERS.find(user => user.id === 'user1') || MOCK_USERS[0]; // Assume user1 is host for now
+    
+    const newParty = {
+      ...newPartyData,
+      id: newId,
+      members: [host], // Start with the host as a member
+      hostName: host.name,
+    };
+
+    parties.push(newParty);
+    console.log(`[Socket.io] New party created with ID: ${newId}. Total parties: ${parties.length}`);
+    
+    // Broadcast the updated list to all clients
+    io.emit('all_parties', parties);
+  });
+
 
   socket.on("disconnect", () => {
     console.log(`[Socket.io] User disconnected: ${socket.id}`);
