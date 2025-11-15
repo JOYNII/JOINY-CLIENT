@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import React, { useMemo, useEffect, useRef } from "react";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import PageHeader from "../../../components/PageHeader";
-import { getPartyById, joinParty, getCurrentUser } from "../../../utils/mockApi";
+import { getPartyById, getCurrentUser } from "../../../utils/mockApi";
 import { Party } from "../../../types";
 import PartyDetails from "./components/PartyDetails";
 import PartyMembers from "./components/PartyMembers";
@@ -16,17 +16,32 @@ import { useChat } from "../../../hooks/useChat";
 export default function PartyDetailsPage() {
   const params = useParams();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const { id } = params;
   const { notifyError } = useErrorNotification();
   
   const currentUser = useMemo(() => getCurrentUser(), [searchParams]);
   
-  const { data: party, isLoading, error } = useQuery<Party | undefined>({
+  const { data: party, isLoading, error, isSuccess } = useQuery<Party | undefined>({
     queryKey: ['party', id],
     queryFn: () => getPartyById(id as string),
     enabled: !!id,
   });
+
+  const partyExists = useRef(false);
+
+  useEffect(() => {
+    if (isSuccess && party) {
+      partyExists.current = true;
+    }
+
+    if (partyExists.current && isSuccess && !party) {
+      console.log("Party deleted, redirecting to home.");
+      const queryString = searchParams.toString();
+      router.push(queryString ? `/home?${queryString}` : '/home');
+    }
+  }, [party, isSuccess, router, searchParams]);
 
   const { messages, newMessage, setNewMessage, handleSendMessage, socketRef } = useChat(id as string, currentUser, queryClient);
 
@@ -38,6 +53,16 @@ export default function PartyDetailsPage() {
       socketRef.current.emit("toggle_join_leave", { partyId: id, userId: currentUser.id });
       return Promise.resolve();
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['party', id] });
+      queryClient.invalidateQueries({ queryKey: ['parties'] });
+
+      if (isMember && party?.members.length === 1) {
+        console.log("Last member left, party deleted. Redirecting to home.");
+        const queryString = searchParams.toString();
+        router.push(queryString ? `/home?${queryString}` : '/home');
+      }
+    },
     onError: (error: Error) => {
       notifyError(error.message);
     }
@@ -47,10 +72,14 @@ export default function PartyDetailsPage() {
     return <div className="min-h-screen flex items-center justify-center"><p>파티 정보를 불러오는 중...</p></div>;
   }
 
-  if (error || !party) {
+  if (error || (!party && !isLoading)) {
     return <div className="min-h-screen flex items-center justify-center"><p>파티를 찾을 수 없거나 오류가 발생했습니다.</p></div>;
   }
   
+  if (!party) {
+    return null;
+  }
+
   const isMember = party.members.some(member => member.id === currentUser.id);
   let themeText = party.theme === "christmas" ? "(크리스마스 ver)" : party.theme === "reunion" ? "(동창회 ver)" : "";
 
@@ -68,7 +97,9 @@ export default function PartyDetailsPage() {
         <JoinLeaveButton 
           isMember={isMember}
           isPending={isJoinLeavePending}
-          onClick={() => toggleJoinLeave()}
+          onClick={() => {
+            toggleJoinLeave();
+          }}
         />
 
         {isMember && (

@@ -15,3 +15,5 @@
 
 - 루트 디렉토리의 mock-socket-server.js: 임시 서버
 - src/utils/mockApi.ts: UI가 임시 서버와 통신할 수 있도록 도와주는 연결책
+
+- 폴더 분석 후 내가 이해할 수 있게 리팩토링 (랜더링의 최종 목적인 html, css, js구현을 기준으로)

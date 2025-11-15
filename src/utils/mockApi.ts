@@ -1,14 +1,10 @@
-// src/utils/mockApi.ts
+
 import { Party, User } from '../types';
 import { io } from 'socket.io-client';
 
-// --- Shared Socket Instance ---
-// This is a simplified approach for a mock environment.
-// In a real app, you'd manage this more robustly (e.g., in a context).
 const socket = io('http://localhost:3001');
 
 
-// --- Mock Data (used for initial user, etc.) ---
 
 const MOCK_USERS: User[] = [
   { id: 'user1', name: '김조이' },
@@ -16,15 +12,10 @@ const MOCK_USERS: User[] = [
   { id: 'user3', name: '최디자' },
 ];
 
-const CURRENT_USER: User = MOCK_USERS[0]; // Default user
+const CURRENT_USER: User = MOCK_USERS[0]; 
 
-// The initialParties data is now primarily managed by the server.
 const initialParties: Party[] = [
-  // This is now just for reference, server holds the true state.
 ];
-
-
-// --- Exported Functions ---
 
 export const getCurrentUser = (): User => {
   if (typeof window === 'undefined') return CURRENT_USER;
@@ -60,15 +51,11 @@ export const getPartyById = async (id: string): Promise<Party | undefined> => {
   return party;
 };
 
-// The functions below are now legacy as the logic is on the server.
-// They are kept to prevent breaking other parts of the app that might use them.
 
 export const createParty = async (partyData: Omit<Party, 'id' | 'members' | 'hostName'>): Promise<void> => {
   console.log('Emitting create_party event to server with data:', partyData);
   return new Promise((resolve) => {
     socket.emit('create_party', partyData);
-    // We don't wait for a response here. The server will broadcast the update.
-    // The query invalidation in the component will trigger a refetch.
     resolve();
   });
 };
@@ -76,7 +63,6 @@ export const createParty = async (partyData: Omit<Party, 'id' | 'members' | 'hos
 export const joinParty = async (partyId: string, userId: string): Promise<Party | undefined> => {
   console.log(`User ${userId} attempting to join party ${partyId}`);
   return new Promise((resolve, reject) => {
-    // This logic is now on the server. This function is deprecated.
     resolve(undefined);
   });
 };
@@ -84,7 +70,6 @@ export const joinParty = async (partyId: string, userId: string): Promise<Party 
 export const leaveParty = async (partyId: string, userId: string): Promise<Party | undefined> => {
     console.log(`User ${userId} attempting to leave party ${partyId}`);
     return new Promise((resolve, reject) => {
-        // This logic is now on the server. This function is deprecated.
         resolve(undefined);
     });
 };

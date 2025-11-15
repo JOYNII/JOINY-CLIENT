@@ -67,38 +67,47 @@ io.on("connection", (socket) => {
     console.log(`[Socket.io] Message received in room ${partyId}:`, message);
   });
 
-  // NEW: Handle join/leave logic
   socket.on('toggle_join_leave', (data) => {
     const { partyId, userId } = data;
     const partyIndex = parties.findIndex((p) => p.id === partyId);
 
     if (partyIndex === -1) {
-      // Handle error: party not found
       return;
     }
 
     const party = parties[partyIndex];
     const isMember = party.members.some((member) => member.id === userId);
+    let partyDeleted = false;
 
     if (isMember) {
-      // Leave party
       party.members = party.members.filter((member) => member.id !== userId);
       console.log(`[Socket.io] User ${userId} left party ${partyId}`);
+
+      // NEW: Check if party is empty and delete it
+      if (party.members.length === 0) {
+        parties.splice(partyIndex, 1);
+        partyDeleted = true;
+        console.log(`[Socket.io] Party ${partyId} was empty and has been deleted.`);
+      }
     } else {
-      // Join party
       if (party.members.length < party.maxMembers) {
         const user = MOCK_USERS.find(u => u.id === userId) || { id: userId, name: `User ${userId}`};
         party.members.push(user);
         console.log(`[Socket.io] User ${userId} joined party ${partyId}`);
       } else {
-        // Handle error: party full
         return;
       }
     }
     
     // Notify all clients in the room to refetch data
-    io.to(partyId).emit('refetch_party_data');
-    console.log(`[Socket.io] Broadcasting refetch signal to room ${partyId} after state change.`);
+    if (!partyDeleted) {
+      io.to(partyId).emit('refetch_party_data');
+      console.log(`[Socket.io] Broadcasting refetch signal to room ${partyId} after state change.`);
+    }
+    
+    // NEW: Broadcast the updated list to all clients for UI sync
+    io.emit('all_parties', parties);
+    console.log('[Socket.io] Broadcasting updated parties list to all clients.');
   });
 
   // NEW: Handle request for all parties

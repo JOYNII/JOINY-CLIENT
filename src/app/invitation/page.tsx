@@ -20,12 +20,10 @@ export default function InvitationPage() {
   const { mutate, isPending } = useMutation({
     mutationFn: createParty,
     onSuccess: () => {
-      // When the mutation is successful, invalidate the parties query to refetch
       queryClient.invalidateQueries({ queryKey: ['parties'] });
       router.push("/home");
     },
     onError: (error) => {
-      // Handle error, e.g., show a notification
       console.error("Failed to create party:", error);
       alert("파티 생성에 실패했습니다.");
     },
@@ -53,7 +51,6 @@ export default function InvitationPage() {
   };
 
   const handleSave = () => {
-    // Basic validation
     if (!hostName || !partyName || !partyDate) {
       alert("주최자, 파티명, 일자는 필수 항목입니다.");
       return;
