@@ -13,7 +13,7 @@
 - + 채팅 기능을 확인하려면 소켓 서버도 열어야함
 - : pnpm install -> pnpm run dev:https-mock
 
-- 루트 디렉토리의 mock-socket-server.js: 임시 서버
-- src/utils/mockApi.ts: UI가 임시 서버와 통신할 수 있도록 도와주는 연결책
+- mock/mock-socket-server.js: 임시 서버
+- mock/mockApi.ts: UI가 임시 서버와 통신할 수 있도록 도와주는 연결책
 
-- 폴더 분석 후 내가 이해할 수 있게 리팩토링 (랜더링의 최종 목적인 html, css, js구현을 기준으로)
+- 새파티를 불러오는 로직 오류 -> 수정해야함

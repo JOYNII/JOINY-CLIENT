@@ -9,7 +9,7 @@ import ImageUploader from "./components/ImageUploader";
 import FormField from "../../components/FormField";
 import PageHeader from "../../components/PageHeader";
 import FeeSelector from "../../components/FeeSelector";
-import { createParty } from "../../utils/mockApi";
+import { createParty } from "../../../mock/mockApi";
 
 export default function InvitationPage() {
   const router = useRouter();

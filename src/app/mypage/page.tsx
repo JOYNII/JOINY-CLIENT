@@ -18,7 +18,7 @@ const MyPage = () => {
           <p className="text-lg"><strong>이름:</strong> {user.name}</p>
           <p className="text-lg"><strong>ID:</strong> {user.id}</p>
           {/* 향후 여기에 추가적인 사용자 정보가 표시됩니다. */}
-        </div>
+        </div>그
       </section>
     </div>
   );

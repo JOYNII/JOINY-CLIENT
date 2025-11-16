@@ -4,13 +4,13 @@ import React, { useMemo, useEffect, useRef } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import PageHeader from "../../../components/PageHeader";
-import { getPartyById, getCurrentUser } from "../../../utils/mockApi";
+import { getPartyById, getCurrentUser } from "../../../../mock/mockApi";
 import { Party } from "../../../types";
 import PartyDetails from "./components/PartyDetails";
 import PartyMembers from "./components/PartyMembers";
 import JoinLeaveButton from "./components/JoinLeaveButton";
 import Chat from "./components/Chat";
-import { useErrorNotification } from "../../../hooks/useErrorNotification";
+
 import { useChat } from "../../../hooks/useChat";
 
 export default function PartyDetailsPage() {
@@ -19,32 +19,6 @@ export default function PartyDetailsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { id } = params;
-  const { notifyError } = useErrorNotification();
-  
-  const currentUser = useMemo(() => getCurrentUser(), [searchParams]);
-  
-  const { data: party, isLoading, error, isSuccess } = useQuery<Party | undefined>({
-    queryKey: ['party', id],
-    queryFn: () => getPartyById(id as string),
-    enabled: !!id,
-  });
-
-  const partyExists = useRef(false);
-
-  useEffect(() => {
-    if (isSuccess && party) {
-      partyExists.current = true;
-    }
-
-    if (partyExists.current && isSuccess && !party) {
-      console.log("Party deleted, redirecting to home.");
-      const queryString = searchParams.toString();
-      router.push(queryString ? `/home?${queryString}` : '/home');
-    }
-  }, [party, isSuccess, router, searchParams]);
-
-  const { messages, newMessage, setNewMessage, handleSendMessage, socketRef } = useChat(id as string, currentUser, queryClient);
-
   const { mutate: toggleJoinLeave, isPending: isJoinLeavePending } = useMutation({
     mutationFn: () => {
       if (!socketRef.current) {
@@ -64,7 +38,7 @@ export default function PartyDetailsPage() {
       }
     },
     onError: (error: Error) => {
-      notifyError(error.message);
+      alert(`오류가 발생했습니다: ${error.message}`);
     }
   });
 
