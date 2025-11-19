@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev:https": "set NODE_ENV=development&& node server.js",
-    "dev:mock-socket": "node mock-socket-server.js",
+    "dev:mock-socket": "node mock/mock-socket-server.js",
     "dev:https-mock": "concurrently \"pnpm:dev:https\" \"pnpm:dev:mock-socket\"",
     "dev": "next dev",
     "build": "next build",

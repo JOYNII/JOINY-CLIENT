@@ -19,10 +19,38 @@ export default function PartyDetailsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { id } = params;
+
+  const { data: currentUser } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: getCurrentUser,
+  });
+
+  const { data: party, error, isLoading } = useQuery<Party, Error>({
+    queryKey: ['party', id],
+    queryFn: () => getPartyById(id as string),
+    enabled: !!id,
+  });
+
+  const {
+    socketRef,
+    messages,
+    newMessage,
+    setNewMessage,
+    handleSendMessage,
+  } = useChat(id as string, currentUser?.id);
+
+  const isMember = useMemo(() => {
+    if (!party || !currentUser) return false;
+    return party.members.some(member => member.id === currentUser.id);
+  }, [party, currentUser]);
+
   const { mutate: toggleJoinLeave, isPending: isJoinLeavePending } = useMutation({
     mutationFn: () => {
       if (!socketRef.current) {
         return Promise.reject(new Error("Socket not connected"));
+      }
+      if (!currentUser) {
+        return Promise.reject(new Error("User not logged in"));
       }
       socketRef.current.emit("toggle_join_leave", { partyId: id, userId: currentUser.id });
       return Promise.resolve();
@@ -54,7 +82,6 @@ export default function PartyDetailsPage() {
     return null;
   }
 
-  const isMember = party.members.some(member => member.id === currentUser.id);
   let themeText = party.theme === "christmas" ? "(크리스마스 ver)" : party.theme === "reunion" ? "(동창회 ver)" : "";
 
   return (

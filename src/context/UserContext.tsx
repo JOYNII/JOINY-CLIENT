@@ -18,34 +18,40 @@ const MOCK_USERS: User[] = [
 const DEFAULT_USER: User = MOCK_USERS[0];
 
 interface UserContextType {
-  user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  isLoading: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User>(DEFAULT_USER);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const userId = searchParams.get("user");
-    if (userId) {
-      const userIndex = parseInt(userId, 10) - 1;
-      if (userIndex >= 0 && userIndex < MOCK_USERS.length) {
-        setUser(MOCK_USERS[userIndex]);
+    try {
+      const userIdParam = searchParams.get("user");
+
+      if (!userIdParam || userIdParam === "none") {
+        setUser(null);
         return;
       }
+
+      const userIndex = parseInt(userIdParam, 10) - 1;
+      if (userIndex >= 0 && userIndex < MOCK_USERS.length) {
+        setUser(MOCK_USERS[userIndex]);
+      } else {
+        setUser(null);
+      }
+    } finally {
+      setIsLoading(false);
     }
-    const newParams = new URLSearchParams(window.location.search);
-    if (!newParams.get("user")) {
-      newParams.set("user", "1");
-    }
-    setUser(DEFAULT_USER);
   }, [searchParams]);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, isLoading }}>
       {children}
     </UserContext.Provider>
   );
