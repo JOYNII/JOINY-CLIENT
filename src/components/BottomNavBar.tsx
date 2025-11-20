@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 // Placeholder Icons for UI clarity
 const HomeIcon = () => (
@@ -72,12 +72,18 @@ const UserIcon = () => (
 
 const BottomNavBar = () => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const queryString = searchParams.toString();
+
+  const createHref = (path: string) => {
+    return `${path}${queryString ? `?${queryString}` : ""}`;
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t border-gray-200 shadow-[0_-1px_10px_rgba(0,0,0,0.05)]">
       <div className="flex justify-around items-center h-full max-w-lg mx-auto">
         <Link
-          href="/home"
+          href={createHref("/home")}
           className={`flex flex-col items-center justify-center hover:text-blue-500 transition-colors w-1/4 ${
             pathname === "/home" ? "text-blue-500" : "text-gray-600"
           }`}
@@ -91,13 +97,18 @@ const BottomNavBar = () => {
           <span className="text-xs font-medium">친구위치</span>
         </div>
 
-        <div className="flex flex-col items-center justify-center text-gray-600 w-1/4">
-          <PlusCircleIcon />
-          <span className="text-xs font-medium">친구추가</span>
-        </div>
+        <Link
+          href={createHref("/friends")}
+          className={`flex flex-col items-center justify-center hover:text-blue-500 transition-colors w-1/4 ${
+            pathname === "/friends" ? "text-blue-500" : "text-gray-600"
+          }`}
+        >
+          <UserIcon />
+          <span className="text-xs font-medium">친구목록</span>
+        </Link>
 
         <Link
-          href="/mypage"
+          href={createHref("/mypage")}
           className={`flex flex-col items-center justify-center hover:text-blue-500 transition-colors w-1/4 ${
             pathname === "/mypage" ? "text-blue-500" : "text-gray-600"
           }`}

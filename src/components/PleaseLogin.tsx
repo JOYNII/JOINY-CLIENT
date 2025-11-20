@@ -1,53 +1,46 @@
 "use client";
 
-import Link from "next/link";
 import React from "react";
-import { usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
+import Link from "next/link";
+import { User } from "../types";
+
+// Mock users to provide login options.
+const MOCK_USERS: User[] = [
+  { id: 'user1', name: '김조이' },
+  { id: 'user2', name: '박개발' },
+  { id: 'user3', name: '최디자' },
+];
 
 export default function PleaseLogin() {
-  const pathname = usePathname();
-  const router = useRouter();
-
-  const handleSimulatedLogin = () => {
-    // Simulate login by redirecting to the current path with a user query param
-    router.push(`${pathname}?user=1`);
-  };
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] p-4">
-      <Image
-        src="/Myparty_icon.png"
-        alt="Myparty Icon"
-        width={80}
-        height={80}
-        className="mb-6"
-      />
-      <h1 className="text-2xl font-bold mb-2">마이파티</h1>
-
-      <div className="w-full max-w-xs space-y-4">
-        <button
-          onClick={handleSimulatedLogin}
-          className="w-full flex items-center justify-center px-6 py-4 font-bold text-black bg-yellow-300 rounded-lg hover:bg-yellow-400 transition-colors shadow-md text-lg"
-        >
-          <span className="mr-2 text-2xl">K</span>
-          카카오톡으로 계속하기
-        </button>
-
-        <div className="flex justify-center items-center gap-4">
-          <button
-            onClick={handleSimulatedLogin}
-            className="text-blue-500 text-sm hover:underline"
+    <div className="fixed inset-0 bg-white flex flex-col justify-center items-center z-50">
+      <div className="w-full max-w-sm p-8">
+        <div className="text-center mb-10">
+          <img src="/Myparty_icon.png" alt="Myparty Icon" className="mx-auto mb-4 h-20 w-20" />
+          <h2 className="text-3xl font-bold text-gray-800">마이파티</h2>
+          <p className="text-gray-600 mt-4">이 서비스를 이용하려면 로그인이 필요합니다.<br/>테스트할 사용자를 선택하세요.</p>
+        </div>
+        <div className="space-y-4">
+          <Link
+            href="/mypage?user=1" // Temporary: Navigates to mypage with user=1 for testing
+            className="block w-full px-6 py-4 text-center font-bold text-gray-800 bg-yellow-300 rounded-xl hover:bg-yellow-400 transition-colors shadow-sm text-lg"
           >
-            이메일로 로그인
-          </button>
-
-          <button
-            onClick={handleSimulatedLogin}
-            className="text-blue-500 text-sm hover:underline"
-          >
-            이메일로 회원가입
-          </button>
+            카카오로 로그인
+          </Link>
+          <div className="flex justify-center space-x-4 mt-2">
+            <Link
+              href="/auth/login/email" // Replace with actual email login page
+              className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              이메일로 로그인
+            </Link>
+            <Link
+              href="/auth/register/email" // Replace with actual email registration page
+              className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              이메일로 회원가입
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -37,7 +37,7 @@ export default function PartyDetailsPage() {
     newMessage,
     setNewMessage,
     handleSendMessage,
-  } = useChat(id as string, currentUser?.id);
+  } = useChat(id as string, currentUser);
 
   const isMember = useMemo(() => {
     if (!party || !currentUser) return false;

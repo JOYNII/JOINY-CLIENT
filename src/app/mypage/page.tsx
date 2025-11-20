@@ -16,7 +16,17 @@ const MyPage = () => {
     );
   }
 
-  return user ? <LoggedInView /> : <PleaseLogin />;
+  return (
+    <div className="relative">
+      <div
+        className={!user ? "blur-sm pointer-events-none" : ""}
+        aria-hidden={!user}
+      >
+        <LoggedInView />
+      </div>
+      {!user && <PleaseLogin />}
+    </div>
+  );
 };
 
 export default MyPage;
